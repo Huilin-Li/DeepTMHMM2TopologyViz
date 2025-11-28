@@ -1,0 +1,18 @@
+##gff-version 3
+# 6YC2_1|Chains Length: 273
+# 6YC2_1|Chains Number of predicted TMRs: 7
+6YC2_1|Chains	outside	1	24				
+6YC2_1|Chains	TMhelix	25	46				
+6YC2_1|Chains	inside	47	56				
+6YC2_1|Chains	TMhelix	57	77				
+6YC2_1|Chains	outside	78	107				
+6YC2_1|Chains	TMhelix	108	126				
+6YC2_1|Chains	inside	127	137				
+6YC2_1|Chains	TMhelix	138	157				
+6YC2_1|Chains	outside	158	162				
+6YC2_1|Chains	TMhelix	163	183				
+6YC2_1|Chains	inside	184	200				
+6YC2_1|Chains	TMhelix	201	225				
+6YC2_1|Chains	outside	226	242				
+6YC2_1|Chains	TMhelix	243	265				
+6YC2_1|Chains	inside	266	273		

@@ -1,0 +1,18 @@
+##gff-version 3
+# 7Z0A_1|Chain Length: 248
+# 7Z0A_1|Chain Number of predicted TMRs: 7
+7Z0A_1|Chain	outside	1	9				
+7Z0A_1|Chain	TMhelix	10	31				
+7Z0A_1|Chain	inside	32	40				
+7Z0A_1|Chain	TMhelix	41	62				
+7Z0A_1|Chain	outside	63	79				
+7Z0A_1|Chain	TMhelix	80	101				
+7Z0A_1|Chain	inside	102	105				
+7Z0A_1|Chain	TMhelix	106	127				
+7Z0A_1|Chain	outside	128	132				
+7Z0A_1|Chain	TMhelix	133	153				
+7Z0A_1|Chain	inside	154	170				
+7Z0A_1|Chain	TMhelix	171	191				
+7Z0A_1|Chain	outside	192	202				
+7Z0A_1|Chain	TMhelix	203	226				
+7Z0A_1|Chain	inside	227	248	
