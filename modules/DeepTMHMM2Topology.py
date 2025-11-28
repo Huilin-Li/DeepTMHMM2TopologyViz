@@ -14,6 +14,7 @@ class TopologyCenters:
         self.membraney0 = None
         self.membraney1 = None
         self.Height = None
+        self.TopoCenters = None
 
     def generate(self):
         df = self.df
@@ -23,7 +24,12 @@ class TopologyCenters:
         else:
             self.InsideNterm()
         return self
-
+    
+    def remove_duplicates(seq):
+        seen = set()
+        seen_add = seen.add
+        return [x for x in seq if not (x in seen or seen_add(x))]
+    
     def OutsideNterm(self):
         df = self.df
         for idx, row in df.iterrows():
@@ -45,7 +51,10 @@ class TopologyCenters:
                 self.addUpwardingTMCenters(idx)
             else:
                 self.addExtracellularNotTMCenters(length)
-        
+
+        CENTERS_arr = np.asarray(self.centers)
+        CENTERS_arr = np.round(CENTERS_arr, 6)
+        self.TopoCenters = self.remove_duplicates(map(tuple, CENTERS_arr.tolist()))
         return self
     
     def InsideNterm(self):
@@ -69,6 +78,9 @@ class TopologyCenters:
                 self.addDownwardingTMCenters(idx)
             else:
                 self.addIntracellularNotTMCenters(length)
+        CENTERS_arr = np.asarray(self.centers)
+        CENTERS_arr = np.round(CENTERS_arr, 6)
+        self.TopoCenters = self.remove_duplicates(map(tuple, CENTERS_arr.tolist()))
         return self
 
     def genTMCircleRelativeCenters(self, membraneThickness):
@@ -78,7 +90,6 @@ class TopologyCenters:
         Ybottoms = []
         Yups = []
         for k,v in TMUnits_idx_centers.items():
-            print("===", k, len(v))
             Ybottoms.append(v[0][-1])
             Yups.append(v[-1][-1])
         bottom = sum(Ybottoms) / float(len(Ybottoms))

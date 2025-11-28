@@ -20,12 +20,11 @@ Topology = (
     .generate()
 )
 
-CENTERS_LIST = Topology.centers
+CENTERS_LIST = Topology.TopoCenters
 y0_y1 = (Topology.membraney0, Topology.membraney1)
 
 
 print(len(CENTERS_LIST), len(set(CENTERS_LIST)))
-
 
 VizPlain_plot(CENTERS_LIST, R=0.25, y0_y1=y0_y1)
 
