@@ -25,7 +25,7 @@ class TopologyCenters:
             self.InsideNterm()
         return self
     
-    def remove_duplicates(seq):
+    def remove_duplicates(self, seq):
         seen = set()
         seen_add = seen.add
         return [x for x in seq if not (x in seen or seen_add(x))]
@@ -54,7 +54,8 @@ class TopologyCenters:
 
         CENTERS_arr = np.asarray(self.centers)
         CENTERS_arr = np.round(CENTERS_arr, 6)
-        self.TopoCenters = self.remove_duplicates(map(tuple, CENTERS_arr.tolist()))
+        CENTERS_arr_list = list(map(tuple, CENTERS_arr.tolist()))
+        self.TopoCenters = self.remove_duplicates(CENTERS_arr_list)
         return self
     
     def InsideNterm(self):
@@ -80,7 +81,8 @@ class TopologyCenters:
                 self.addIntracellularNotTMCenters(length)
         CENTERS_arr = np.asarray(self.centers)
         CENTERS_arr = np.round(CENTERS_arr, 6)
-        self.TopoCenters = self.remove_duplicates(map(tuple, CENTERS_arr.tolist()))
+        CENTERS_arr_list = list(map(tuple, CENTERS_arr.tolist()))
+        self.TopoCenters = self.remove_duplicates(CENTERS_arr_list)
         return self
 
     def genTMCircleRelativeCenters(self, membraneThickness):
