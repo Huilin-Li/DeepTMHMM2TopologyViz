@@ -216,11 +216,9 @@ def _peak_curve_centers123(pre_center, R, upward, remainingCircles_comb):
 
 
 def _over0_on_check_remainingCircles(pre_center, length, away, R, upward):
-    print("_over0_on_check_remainingCircles", pre_center)
     centers_bridge = []
     remainingCircles = length - away * 2
     remainingCircles_comb = CirclesCombinations(remainingCircles)
-    print("length=", length, "remainingCircles_comb=", remainingCircles_comb)
     if isinstance(remainingCircles_comb, list):
         # left away side
         left_start_center = pre_center
@@ -236,12 +234,12 @@ def _over0_on_check_remainingCircles(pre_center, length, away, R, upward):
         # remaining circles is limited in [1,2,3]
         # left away side
         left_start_center = pre_center
-        left_next_CircleCenters = _gen_straight_nCircleCenters(left_start_center, away+1, R, upward)
+        left_next_CircleCenters = _gen_straight_nCircleCenters(left_start_center, away, R, upward)
         # peak curve
         peak123_curve_centers = _peak_curve_centers123(pre_center=left_next_CircleCenters[-1], R=R, remainingCircles_comb=remainingCircles_comb, upward=upward)
         # right
         right_start_center = peak123_curve_centers[-1]
-        right_next_CircleCenters = _gen_straight_nCircleCenters(right_start_center, away+1, R, operator.not_(upward))
+        right_next_CircleCenters = _gen_straight_nCircleCenters(right_start_center, away, R, operator.not_(upward))
         centers_bridge = centers_bridge + left_next_CircleCenters + peak123_curve_centers + right_next_CircleCenters
         return centers_bridge
 
@@ -333,77 +331,67 @@ def AddNterm_Centers(pre_center, length, away, R, IMO):
     else:
         return _add_Extracellular_Nterm_Centers(pre_center, length, away, R)
 
-
 def _add_Intracellular_Nterm_Centers(pre_center, length, away, R):
     # Nterm inside
     centers_bridge = [pre_center]
-    print("start", centers_bridge)
     remainingCircles = length - away # one side
-    if not remainingCircles > 0:
-        remainingCircles = length
-    # get S curve
-    restCircles_comb = CirclesCombinations(remainingCircles)
-    if isinstance(restCircles_comb, list):
-        Scurve_centers = _gen_horizontalS(pre_center=centers_bridge[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=False)
-        centers_bridge += Scurve_centers[1:]
-        print("centers_bridge", centers_bridge)
-        # one side away
+
+    if length <= away:
         pre_center = centers_bridge[-1]
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away, R=R, upward=True)
+        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=True)
         centers_bridge += next_CircleCenters[1:]
-        # bridge center
-        bridge_center = _next_circle_center(centers_bridge[-1], R, upward=True, degree=90)
-        centers_bridge += [bridge_center]
         return centers_bridge
     else:
-        # short Nterm
-        pre_center = centers_bridge[-1]
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=restCircles_comb, R=R, upward=True)
-        centers_bridge += next_CircleCenters[1:]
-        # bridge center
-        bridge_center = _next_circle_center(centers_bridge[-1], R, upward=True, degree=90)
-        centers_bridge += [bridge_center]
-        return centers_bridge
+        restCircles_comb = CirclesCombinations(remainingCircles)
+        if isinstance(restCircles_comb, list):
+            Scurve_centers = _gen_horizontalS(pre_center=centers_bridge[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=False)
+            centers_bridge += Scurve_centers[1:]
+            # right side away
+            pre_center = centers_bridge[-1]
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away, R=R, upward=True)
+            centers_bridge += next_CircleCenters[1:]
+            # bridge center
+            bridge_center = _next_circle_center(centers_bridge[-1], R, upward=True, degree=90)
+            centers_bridge += [bridge_center]
+            return centers_bridge
+        else:
+            # short Nterm
+            pre_center = centers_bridge[-1]
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=True)
+            centers_bridge += next_CircleCenters[1:]
+            return centers_bridge
     
 
 def _add_Extracellular_Nterm_Centers(pre_center, length, away, R):
     # Nterm inside
     centers_bridge = [pre_center]
-    print(centers_bridge)
     remainingCircles = length - away # one side
-    if not remainingCircles > 0:
-        remainingCircles = length
-    # get S curve
-    print(remainingCircles)
-    restCircles_comb = CirclesCombinations(remainingCircles)
-    if isinstance(restCircles_comb, list):
-        Scurve_centers = _gen_horizontalS(pre_center=centers_bridge[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=True)
-        print("Scurve_centers", Scurve_centers)
-        centers_bridge += Scurve_centers[1:]
-        # one side away
+    if length <= away:
         pre_center = centers_bridge[-1]
-        print("pre_center", pre_center)
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away, R=R, upward=False)
-        print("next_CircleCenters", next_CircleCenters)
+        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=False)
         centers_bridge += next_CircleCenters[1:]
-        # bridge center
-        bridge_center = _next_circle_center(centers_bridge[-1], R, upward=False, degree=90)
-        centers_bridge += [bridge_center]
-        print("centers_bridge", len(centers_bridge))
         return centers_bridge
     else:
-        # short Nterm
-        # downwarding straight
-        pre_center = centers_bridge[-1]
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=restCircles_comb, R=R, upward=True)
-        centers_bridge += next_CircleCenters[1:]
-        # bridge center
-        bridge_center = _next_circle_center(centers_bridge[-1], R, upward=False, degree=90)
-        centers_bridge += [bridge_center]
-        return centers_bridge
+        restCircles_comb = CirclesCombinations(remainingCircles)
+        if isinstance(restCircles_comb, list):
+            Scurve_centers = _gen_horizontalS(pre_center=centers_bridge[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=True)
+            centers_bridge += Scurve_centers[1:]
+            # right side away
+            pre_center = centers_bridge[-1]
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away, R=R, upward=False)
+            centers_bridge += next_CircleCenters[1:]
+            # bridge center
+            bridge_center = _next_circle_center(centers_bridge[-1], R, upward=False, degree=90)
+            centers_bridge += [bridge_center]
+            return centers_bridge
+        else:
+            # short Nterm
+            pre_center = centers_bridge[-1]
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=False)
+            centers_bridge += next_CircleCenters[1:]
+            return centers_bridge
 
     
-
 
 
 ###################################
@@ -420,54 +408,51 @@ def _add_Intracellular_Cterm_Centers(pre_center, length, away, R):
     # Cterm inside
     centers_bridge = [pre_center]
     remainingCircles = length - away # one side
-    if not remainingCircles > 0:
-        remainingCircles = length
-    # get S curve
-    restCircles_comb = CirclesCombinations(remainingCircles)
-    print("_add_Intracellular_Cterm_Centers",restCircles_comb)
-    if isinstance(restCircles_comb, list):
-        # left one side
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away, R=R, upward=False)
-        # S curve
-        Scurve_centers = _gen_horizontalS(pre_center=next_CircleCenters[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=False)
-        centers_bridge = centers_bridge + next_CircleCenters[1:] + Scurve_centers[1:]
+
+    if length <= away:
+        pre_center = centers_bridge[-1]
+        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=False)
+        centers_bridge += next_CircleCenters[1:]
         return centers_bridge
     else:
-        # short Nterm
-        # downwarding straight
-        pre_center = centers_bridge[-1]
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=restCircles_comb, R=R, upward=False)
-        centers_bridge += next_CircleCenters[1:]
-        # bridge center
-        bridge_center = _next_circle_center(centers_bridge[-1], R, upward=True, degree=90)
-        centers_bridge += [bridge_center]
-        return centers_bridge
-    
+        restCircles_comb = CirclesCombinations(remainingCircles)
+        if isinstance(restCircles_comb, list):
+            # left one side
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away+1, R=R, upward=False)
+            # S curve
+            Scurve_centers = _gen_horizontalS(pre_center=next_CircleCenters[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=False)
+            centers_bridge = centers_bridge + next_CircleCenters[1:] + Scurve_centers[1:]
+            return centers_bridge
+        else:
+            # short Nterm
+            pre_center = centers_bridge[-1]
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=False)
+            centers_bridge += next_CircleCenters[1:]
+            return centers_bridge
+        
 
 def _add_Extracellular_Cterm_Centers(pre_center, length, away, R):
     # Cterm outside
     centers_bridge = [pre_center]
-    print(centers_bridge)
     remainingCircles = length - away # one side
-    if not remainingCircles > 0:
-        remainingCircles = length
-    # get S curve
-    print(remainingCircles)
-    restCircles_comb = CirclesCombinations(remainingCircles)
-    if isinstance(restCircles_comb, list):
-        # left one side
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away, R=R, upward=True)
-        # S curve
-        Scurve_centers = _gen_horizontalS(pre_center=next_CircleCenters[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=True)
-        centers_bridge = centers_bridge + next_CircleCenters[1:] + Scurve_centers[1:]
+
+    if length <= away:
+        pre_center = centers_bridge[-1]
+        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=True)
+        centers_bridge += next_CircleCenters[1:]
         return centers_bridge
     else:
-        # short Nterm
-        # downwarding straight
-        pre_center = centers_bridge[-1]
-        next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=restCircles_comb, R=R, upward=True)
-        centers_bridge += next_CircleCenters[1:]
-        # bridge center
-        bridge_center = _next_circle_center(centers_bridge[-1], R, upward=False, degree=90)
-        centers_bridge += [bridge_center]
-        return centers_bridge
+        restCircles_comb = CirclesCombinations(remainingCircles)
+        if isinstance(restCircles_comb, list):
+            # left one side
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away+1, R=R, upward=True)
+            # S curve
+            Scurve_centers = _gen_horizontalS(pre_center=next_CircleCenters[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=True)
+            centers_bridge = centers_bridge + next_CircleCenters[1:] + Scurve_centers[1:]
+            return centers_bridge
+        else:
+            # short Nterm
+            pre_center = centers_bridge[-1]
+            next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=length, R=R, upward=True)
+            centers_bridge += next_CircleCenters[1:]
+            return centers_bridge

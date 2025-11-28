@@ -11,6 +11,9 @@ class TopologyCenters:
         self.df = dff3_df
         self.centers = None
         self.TMCircleCenters_DICT = None
+        self.membraney0 = None
+        self.membraney1 = None
+        self.Height = None
 
     def generate(self):
         df = self.df
@@ -31,20 +34,18 @@ class TopologyCenters:
             if idx == 0:
                 # Nterm
                 self.addNterm(length)
-                print("idx=", idx, len(self.centers))
+                self.membraney1 = self.centers[-1][-1]
+                self.membraney0 = self.membraney1 - self.Height 
             elif idx%4 == 1:
                 # download TM
                 self.addDownwardingTMCenters(idx)
-                print("idx=", idx, len(self.centers))
             elif idx%4 == 2:
                 self.addIntracellularNotTMCenters(length) 
-                print("idx=", idx, len(self.centers))
             elif idx%4 == 3:
                 self.addUpwardingTMCenters(idx)
-                print("idx=", idx, len(self.centers))
             else:
                 self.addExtracellularNotTMCenters(length)
-                print("idx=", idx, len(self.centers))
+        
         return self
     
     def InsideNterm(self):
@@ -57,11 +58,11 @@ class TopologyCenters:
             if idx == 0:
                 # Nterm
                 self.addNterm(length)
-                print("idx=", idx, len(self.centers))
+                self.membraney0 = self.centers[-1][-1]
+                self.membraney1 = self.membraney0 + self.Height 
             elif idx%4 == 1:
                 # download TM
                 self.addUpwardingTMCenters(idx) 
-                print("idx=", idx, len(self.centers))
             elif idx%4 == 2:
                 self.addExtracellularNotTMCenters(length) 
             elif idx%4 == 3:
@@ -73,6 +74,16 @@ class TopologyCenters:
     def genTMCircleRelativeCenters(self, membraneThickness):
         TMUnits_idx_centers = tools.GenerateTMCircleRelativeCenters(df=self.df, membraneThickness=membraneThickness, R=self.R)
         self.TMCircleCenters_DICT = TMUnits_idx_centers
+        TMUnits_idx_centers = self.TMCircleCenters_DICT
+        Ybottoms = []
+        Yups = []
+        for k,v in TMUnits_idx_centers.items():
+            print("===", k, len(v))
+            Ybottoms.append(v[0][-1])
+            Yups.append(v[-1][-1])
+        bottom = sum(Ybottoms) / float(len(Ybottoms))
+        up = sum(Yups) / float(len(Yups))
+        self.Height = up - bottom
         return self
     
     def genMembraneYUpBottom(self):
@@ -83,7 +94,6 @@ class TopologyCenters:
         CENTERs_bridge_list = [self.start_center]
         Nterm_IMO = df.iloc[0]["IMO"]
         Nterm_centers_bridge = tools.AddNterm_Centers(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, IMO=Nterm_IMO)
-        print("Nterm_centers_bridge", len(Nterm_centers_bridge))
         CENTERs_bridge_list += Nterm_centers_bridge[1:]
         self.centers = CENTERs_bridge_list
         return self
@@ -93,7 +103,6 @@ class TopologyCenters:
         CENTERs_bridge_list = self.centers
         Cterm_IMO = df.iloc[-1]["IMO"]
         Cterm_centers_bridge = tools.AddCterm_Centers(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, IMO=Cterm_IMO)
-        print("Cterm_centers_bridge", len(Cterm_centers_bridge))
         CENTERs_bridge_list += Cterm_centers_bridge[1:]
         self.centers = CENTERs_bridge_list
         return self
@@ -122,7 +131,6 @@ class TopologyCenters:
             downTMCenters_relative = downTMCenters_relative[::-1]
         
         downTMCenters = tools.MoveCoords(coords=downTMCenters_relative, new_start=CENTERs_bridge_list[-1])
-        print("downTMCenters", len(downTMCenters), len(set(downTMCenters)))
         CENTERs_bridge_list += downTMCenters
         self.centers = CENTERs_bridge_list
         return self
