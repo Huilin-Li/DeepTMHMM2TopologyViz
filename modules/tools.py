@@ -206,7 +206,7 @@ def _peak_curve_centers123(pre_center, R, upward, remainingCircles_comb):
     else:
         # remainingCircles_comb == 3:
         center1 = _next_circle_center(pre_center, R, upward, degree=90)
-        center2 = _next_circle_center(center1, R, upward, degree=60)
+        center2 = _next_circle_center(center1, R, upward, degree=30)
         center3 = _next_circle_center(center2, R, operator.not_(upward), degree=60)
         bridge_center = _next_circle_center(center3, R, upward=operator.not_(upward), degree=90)
         peak123_bridge_centers += [center1, center2, center3, bridge_center]
@@ -278,15 +278,9 @@ def _below0_on_check_remainingCircles(pre_center, length, R, upward):
         return centers_bridge
     else:
         # remaining circles is limited in [1,2,3]
-        # left away side
-        left_start_center = pre_center
-        left_next_CircleCenters = _gen_straight_nCircleCenters(left_start_center, 1, R, upward)
         # peak curve
-        peak123_curve_centers = _peak_curve_centers123(pre_center=left_next_CircleCenters[-1], R=R, remainingCircles_comb=remainingCircles_comb, upward=upward)
-        # right
-        right_start_center = peak123_curve_centers[-1]
-        right_next_CircleCenters = _gen_straight_nCircleCenters(right_start_center, 1, R, operator.not_(upward))
-        centers_bridge = centers_bridge + left_next_CircleCenters + peak123_curve_centers + right_next_CircleCenters
+        peak123_curve_centers = _peak_curve_centers123(pre_center=pre_center, R=R, remainingCircles_comb=remainingCircles_comb, upward=upward)
+        centers_bridge = centers_bridge + peak123_curve_centers
         return centers_bridge
 
 
