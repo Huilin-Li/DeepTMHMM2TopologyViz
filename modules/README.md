@@ -32,7 +32,9 @@ Therefor,
 $$
 4y-1 \leq N \leq 30y-5
 $$
-$$
+
+
+```math
 y\leq \frac{N+1}{4}
-$$
+```
 
