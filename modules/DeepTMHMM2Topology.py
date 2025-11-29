@@ -4,17 +4,19 @@ from . import tools
 
 
 class TopologyCenters:
-    def __init__(self, R, away, dff3_df):
+    def __init__(self, R, away, dff3_df, line3_df):
         self.start_center = (0, 0)
         self.away = int(away)
         self.R = float(R)
         self.df = dff3_df
+        self.line3_df = line3_df
         self.centers = None
         self.TMCircleCenters_DICT = None
         self.membraney0 = None
         self.membraney1 = None
         self.Height = None
         self.TopoCenters = None
+        self.TopoDataFrame = None
 
     def generate(self):
         df = self.df
@@ -25,6 +27,15 @@ class TopologyCenters:
             self.InsideNterm()
         return self
     
+    def AssignAminoAcide(self):
+        TopoDataFrame = self.line3_df
+        centers_list = self.TopoCenters
+        TopoDataFrame["center"] = centers_list
+        self.TopoDataFrame = TopoDataFrame
+        return self
+    
+
+
     def remove_duplicates(self, centers):
         CENTERS_arr = np.asarray(centers)
         CENTERS_arr = np.round(CENTERS_arr, 6)
@@ -56,6 +67,7 @@ class TopologyCenters:
                 self.addExtracellularNotTMCenters(length)
 
         self.TopoCenters = self.remove_duplicates(self.centers)
+        self.AssignAminoAcide()
         return self
     
     def InsideNterm(self):
@@ -81,6 +93,7 @@ class TopologyCenters:
                 self.addIntracellularNotTMCenters(length)
 
         self.TopoCenters = self.remove_duplicates(self.centers)
+        self.AssignAminoAcide()
         return self
 
     def genTMCircleRelativeCenters(self, membraneThickness):

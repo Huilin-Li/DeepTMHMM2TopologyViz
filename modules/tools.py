@@ -109,7 +109,6 @@ def CirclesCombinations(N, max_a=2, max_b=6):
         x_max = (N-1)//2
         y_max = (N+1)//4
         
-        x_range = np.arange(1,x_max+1,2)
         a_range = np.arange(1,max_a+1)
         
         y_range = np.arange(1,y_max+1)
