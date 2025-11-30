@@ -3,9 +3,11 @@ from . import tools
 
 
 class TopologyCenters:
-    def __init__(self, R, away, dff3_df, line3_df):
+    def __init__(self, R, away, max_a, max_b, dff3_df, line3_df):
         self.start_center = (0, 0)
         self.away = int(away)
+        self.max_a = int(max_a)
+        self.max_b = int(max_b)
         self.R = float(R)
         self.df = dff3_df
         self.line3_df = line3_df
@@ -114,7 +116,7 @@ class TopologyCenters:
         df = self.df
         CENTERs_bridge_list = [self.start_center]
         Nterm_IMO = df.iloc[0]["IMO"]
-        Nterm_centers_bridge = tools.AddNterm_Centers(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, IMO=Nterm_IMO)
+        Nterm_centers_bridge = tools.AddNterm_Centers(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, IMO=Nterm_IMO, max_a=self.max_a, max_b=self.max_b)
         CENTERs_bridge_list += Nterm_centers_bridge[1:]
         self.centers = CENTERs_bridge_list
         return self
@@ -123,7 +125,7 @@ class TopologyCenters:
         df = self.df
         CENTERs_bridge_list = self.centers
         Cterm_IMO = df.iloc[-1]["IMO"]
-        Cterm_centers_bridge = tools.AddCterm_Centers(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, IMO=Cterm_IMO)
+        Cterm_centers_bridge = tools.AddCterm_Centers(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, IMO=Cterm_IMO, max_a=self.max_a, max_b=self.max_b)
         CENTERs_bridge_list += Cterm_centers_bridge[1:]
         self.centers = CENTERs_bridge_list
         return self
@@ -158,14 +160,14 @@ class TopologyCenters:
     
     def addExtracellularNotTMCenters(self, length):
         CENTERs_bridge_list = self.centers
-        ExtracellularNotTMCenters = tools.AddExtracellularNotTMCenters(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R)
+        ExtracellularNotTMCenters = tools.AddExtracellularNotTMCenters(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, max_a=self.max_a, max_b=self.max_b)
         CENTERs_bridge_list += ExtracellularNotTMCenters
         self.centers = CENTERs_bridge_list
         return self
 
     def addIntracellularNotTMCenters(self, length):
         CENTERs_bridge_list = self.centers
-        IntracellularNotTMCenters = tools.AddIntracellularNotTMCenters(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R)
+        IntracellularNotTMCenters = tools.AddIntracellularNotTMCenters(pre_center=CENTERs_bridge_list[-1], length=length, away=self.away, R=self.R, max_a=self.max_a, max_b=self.max_b)
         CENTERs_bridge_list += IntracellularNotTMCenters
         self.centers = CENTERs_bridge_list
         return self

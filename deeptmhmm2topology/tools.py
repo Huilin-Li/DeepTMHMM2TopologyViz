@@ -102,7 +102,7 @@ def _pick_k_with_replacement_targetSUM_sorted(arr, k, target_sum=None):
     combinations.sort(key=lambda item: (item["var"], item["items"]))
     return combinations
 
-def CirclesCombinations(N, max_a=2, max_b=6):
+def CirclesCombinations(N, max_a, max_b):
     if N <= 3: # N_min = 3
         return N
     else:
@@ -214,10 +214,10 @@ def _peak_curve_centers123(pre_center, R, upward, remainingCircles_comb):
 
 
 
-def _over0_on_check_remainingCircles(pre_center, length, away, R, upward):
+def _over0_on_check_remainingCircles(pre_center, length, away, R, upward, max_a, max_b):
     centers_bridge = []
     remainingCircles = length - away * 2
-    remainingCircles_comb = CirclesCombinations(remainingCircles)
+    remainingCircles_comb = CirclesCombinations(remainingCircles, max_a, max_b)
     if isinstance(remainingCircles_comb, list):
         # left away side
         left_start_center = pre_center
@@ -261,9 +261,9 @@ def _equal0_on_check_remainingCircles(pre_center, away, R, upward):
 
 
 
-def _below0_on_check_remainingCircles(pre_center, length, R, upward):
+def _below0_on_check_remainingCircles(pre_center, length, R, upward, max_a, max_b):
     centers_bridge = []
-    remainingCircles_comb = CirclesCombinations(length)
+    remainingCircles_comb = CirclesCombinations(length, max_a, max_b)
     if isinstance(remainingCircles_comb, list):
         # left away side
         left_start_center = pre_center
@@ -285,46 +285,46 @@ def _below0_on_check_remainingCircles(pre_center, length, R, upward):
 
 
 
-def _not_extracellular_not_Nterm_not_Cterm(pre_center, length, away, R):
+def _not_extracellular_not_Nterm_not_Cterm(pre_center, length, away, R, max_a, max_b):
     upward = False
     check_remainingCircles = length - away * 2
     if check_remainingCircles > 0 :
-        return _over0_on_check_remainingCircles(pre_center, length, away, R, upward)
+        return _over0_on_check_remainingCircles(pre_center, length, away, R, upward, max_a, max_b)
     elif check_remainingCircles < 0 :
-        return _below0_on_check_remainingCircles(pre_center, length, R, upward)
+        return _below0_on_check_remainingCircles(pre_center, length, R, upward, max_a, max_b)
     else:
         return _equal0_on_check_remainingCircles(pre_center, away, R, upward)
     
 
-def _extracellular_not_Nterm_not_Cterm(pre_center, length, away, R):
+def _extracellular_not_Nterm_not_Cterm(pre_center, length, away, R, max_a, max_b):
     upward = True
     check_remainingCircles = length - away * 2
     if check_remainingCircles > 0 :
-        return _over0_on_check_remainingCircles(pre_center, length, away, R, upward)
+        return _over0_on_check_remainingCircles(pre_center, length, away, R, upward, max_a, max_b)
     elif check_remainingCircles < 0 :
-        return _below0_on_check_remainingCircles(pre_center, length, R, upward)
+        return _below0_on_check_remainingCircles(pre_center, length, R, upward, max_a, max_b)
     else:
         return _equal0_on_check_remainingCircles(pre_center, away, R, upward)
 
 
 
-def AddExtracellularNotTMCenters(pre_center, length, away, R):
-    return _extracellular_not_Nterm_not_Cterm(pre_center, length, away, R)
+def AddExtracellularNotTMCenters(pre_center, length, away, R, max_a, max_b):
+    return _extracellular_not_Nterm_not_Cterm(pre_center, length, away, R, max_a, max_b)
 
-def AddIntracellularNotTMCenters(pre_center, length, away, R):
-    return _not_extracellular_not_Nterm_not_Cterm(pre_center, length, away, R)
+def AddIntracellularNotTMCenters(pre_center, length, away, R, max_a, max_b):
+    return _not_extracellular_not_Nterm_not_Cterm(pre_center, length, away, R, max_a, max_b)
 
 
 ###################################
 # Add Nterm
 ###################################
-def AddNterm_Centers(pre_center, length, away, R, IMO):
+def AddNterm_Centers(pre_center, length, away, R, IMO, max_a, max_b):
     if IMO == "inside":
-        return _add_Intracellular_Nterm_Centers(pre_center, length, away, R)
+        return _add_Intracellular_Nterm_Centers(pre_center, length, away, R, max_a, max_b)
     else:
-        return _add_Extracellular_Nterm_Centers(pre_center, length, away, R)
+        return _add_Extracellular_Nterm_Centers(pre_center, length, away, R, max_a, max_b)
 
-def _add_Intracellular_Nterm_Centers(pre_center, length, away, R):
+def _add_Intracellular_Nterm_Centers(pre_center, length, away, R, max_a, max_b):
     # Nterm inside
     centers_bridge = [pre_center]
     remainingCircles = length - away # one side
@@ -335,7 +335,7 @@ def _add_Intracellular_Nterm_Centers(pre_center, length, away, R):
         centers_bridge += next_CircleCenters[1:]
         return centers_bridge
     else:
-        restCircles_comb = CirclesCombinations(remainingCircles)
+        restCircles_comb = CirclesCombinations(remainingCircles, max_a, max_b)
         if isinstance(restCircles_comb, list):
             Scurve_centers = _gen_horizontalS(pre_center=centers_bridge[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=False)
             centers_bridge += Scurve_centers[1:]
@@ -355,7 +355,7 @@ def _add_Intracellular_Nterm_Centers(pre_center, length, away, R):
             return centers_bridge
     
 
-def _add_Extracellular_Nterm_Centers(pre_center, length, away, R):
+def _add_Extracellular_Nterm_Centers(pre_center, length, away, R, max_a, max_b):
     # Nterm inside
     centers_bridge = [pre_center]
     remainingCircles = length - away # one side
@@ -365,7 +365,7 @@ def _add_Extracellular_Nterm_Centers(pre_center, length, away, R):
         centers_bridge += next_CircleCenters[1:]
         return centers_bridge
     else:
-        restCircles_comb = CirclesCombinations(remainingCircles)
+        restCircles_comb = CirclesCombinations(remainingCircles, max_a, max_b)
         if isinstance(restCircles_comb, list):
             Scurve_centers = _gen_horizontalS(pre_center=centers_bridge[-1], R=R, restCircles_comb_is_list=restCircles_comb, upward=True)
             centers_bridge += Scurve_centers[1:]
@@ -390,14 +390,14 @@ def _add_Extracellular_Nterm_Centers(pre_center, length, away, R):
 ###################################
 # Add Cterm
 ###################################
-def AddCterm_Centers(pre_center, length, away, R, IMO):
+def AddCterm_Centers(pre_center, length, away, R, IMO, max_a, max_b):
     if IMO == "inside":
-        return _add_Intracellular_Cterm_Centers(pre_center, length, away, R)
+        return _add_Intracellular_Cterm_Centers(pre_center, length, away, R, max_a, max_b)
     else:
-        return _add_Extracellular_Cterm_Centers(pre_center, length, away, R)
+        return _add_Extracellular_Cterm_Centers(pre_center, length, away, R, max_a, max_b)
     
 
-def _add_Intracellular_Cterm_Centers(pre_center, length, away, R):
+def _add_Intracellular_Cterm_Centers(pre_center, length, away, R, max_a, max_b):
     # Cterm inside
     centers_bridge = [pre_center]
     remainingCircles = length - away # one side
@@ -408,7 +408,7 @@ def _add_Intracellular_Cterm_Centers(pre_center, length, away, R):
         centers_bridge += next_CircleCenters[1:]
         return centers_bridge
     else:
-        restCircles_comb = CirclesCombinations(remainingCircles)
+        restCircles_comb = CirclesCombinations(remainingCircles, max_a, max_b)
         if isinstance(restCircles_comb, list):
             # left one side
             next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away+1, R=R, upward=False)
@@ -424,7 +424,7 @@ def _add_Intracellular_Cterm_Centers(pre_center, length, away, R):
             return centers_bridge
         
 
-def _add_Extracellular_Cterm_Centers(pre_center, length, away, R):
+def _add_Extracellular_Cterm_Centers(pre_center, length, away, R, max_a, max_b):
     # Cterm outside
     centers_bridge = [pre_center]
     remainingCircles = length - away # one side
@@ -435,7 +435,7 @@ def _add_Extracellular_Cterm_Centers(pre_center, length, away, R):
         centers_bridge += next_CircleCenters[1:]
         return centers_bridge
     else:
-        restCircles_comb = CirclesCombinations(remainingCircles)
+        restCircles_comb = CirclesCombinations(remainingCircles, max_a, max_b)
         if isinstance(restCircles_comb, list):
             # left one side
             next_CircleCenters = _gen_straight_nCircleCenters(pre_center=pre_center, n=away+1, R=R, upward=True)
