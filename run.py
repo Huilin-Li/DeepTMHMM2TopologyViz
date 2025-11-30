@@ -19,7 +19,7 @@ print(line3_df)
 
 # # Topology
 Topology = (
-    TopologyCenters(R=0.25, away=4, dff3_df=dff3_df, line3_df=line3_df)
+    TopologyCenters(R=0.25, away=4, dff3_df=dff3_df, line3_df=line3_df, max_a=2, max_b=6)
     .genTMCircleRelativeCenters(membraneThickness=3)
     .generate()
 )
