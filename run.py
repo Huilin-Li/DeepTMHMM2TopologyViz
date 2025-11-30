@@ -37,4 +37,3 @@ print(y0_y1)
 
 # VizPlain_plot(CENTERS_LIST, R=0.25, y0_y1=y0_y1)
 
-f"He said his name is {name}."
