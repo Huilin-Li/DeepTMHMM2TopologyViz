@@ -1,25 +1,31 @@
 import numpy as np
 import plotly.graph_objects as go
+import ast
 
 
 
 
-
-def VizPlain_plot(centers_list, 
-                  R, 
+def VizPlain_plot(TopologyDataframe, R,
+                  range=(0,1310),
                   y0=None, 
                   y1= None,
                   display_circle=False, 
                   show_path=True,
                   add_NtermAnnotation=True,
                   add_CtermAnnotation=True):
-    
+    ##################################################
+    # basic lines and dots
+    ##################################################
+    sub_df = TopologyDataframe.iloc[range[0]:range[-1]]
+    centers_list_tmp = sub_df["center"].tolist()
+    centers_list = [ast.literal_eval(item) for item in centers_list_tmp]
     CENTERS_arr = np.asarray(centers_list)
     xs = CENTERS_arr[:, 0]
     ys = CENTERS_arr[:, 1]
-    show_path = True
+
 
     fig = go.Figure()
+    ## membrane position
     if y0 and y1:
         fig.add_hrect(y0=y0, y1=y1, line_width=0, fillcolor="tan", opacity=0.5, layer="below")
 
@@ -39,10 +45,11 @@ def VizPlain_plot(centers_list,
             go.Scatter(
                 x=xs,
                 y=ys,
-                mode="lines+markers",
-                line=dict(shape="spline", width=5),
+                mode="lines+markers+text",
+                line=dict(shape="spline", width=1),
                 marker=dict(size=10),
-                name="centers",
+                hovertext=sub_df["position"].astype(str) + sub_df["AA"],
+                hoverinfo="text"
             )
         )
 
@@ -69,6 +76,12 @@ def VizPlain_plot(centers_list,
 
     fig.update_xaxes(range=[x_min, x_max], scaleanchor="y", visible=False)
     fig.update_yaxes(range=[y_min, y_max], visible=False)
-    fig.update_layout(width=1200, height=900, showlegend=False)
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)", 
+        plot_bgcolor="rgba(0,0,0,0)", 
+        autosize=True,
+        margin=dict(l=20, r=20, t=0, b=0),
+        showlegend=False
+            )
 
-    fig.write_html("protein.html")
+    fig.write_html("protein_before.html")
