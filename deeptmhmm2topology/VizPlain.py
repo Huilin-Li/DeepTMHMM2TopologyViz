@@ -1,11 +1,11 @@
 import numpy as np
 import plotly.graph_objects as go
 import ast
+from plotly.subplots import make_subplots
 
 
 
-
-def VizPlain_plot(TopologyDataframe, R,
+def VizPlain_plot_mycase(TopologyDataframe, R,
                   range=(0,1310),
                   y0=None, 
                   y1= None,
@@ -24,11 +24,13 @@ def VizPlain_plot(TopologyDataframe, R,
     ys = CENTERS_arr[:, 1]
 
 
-    fig = go.Figure()
+    # fig = go.Figure()
+    fig = make_subplots(rows=2, cols=1)
     ## membrane position
     if y0 and y1:
-        fig.add_hrect(y0=y0, y1=y1, line_width=0, fillcolor="tan", opacity=0.5, layer="below")
-
+        fig.add_hrect(y0=y0, y1=y1, line_width=0, fillcolor="tan", opacity=0.5, layer="below", row=1, col=1)
+        fig.add_hrect(y0=y0, y1=y1, line_width=0, fillcolor="tan", opacity=0.5, layer="below", row=2, col=1)
+    
     if display_circle:
         for (cx, cy) in CENTERS_arr:
             fig.add_shape(
