@@ -1,7 +1,6 @@
-from modules.VizPlain import VizPlain_plot
-from modules.DeepTMHMM2Topology import TopologyCenters
-from modules.tools import Convert_dff32df, Convert_3line2df
-import numpy as np
+from deeptmhmm2topology.VizPlain import VizPlain_plot
+from deeptmhmm2topology.DeepTMHMM2Topology import TopologyCenters
+from deeptmhmm2topology.tools import Convert_dff32df, Convert_3line2df
 
 
 

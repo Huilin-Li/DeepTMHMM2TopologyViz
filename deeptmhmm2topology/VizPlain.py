@@ -34,7 +34,7 @@ def VizPlain_plot(centers_list, R, y0_y1=None, display_circle=False, show_path=T
             )
         )
 
-    # --- Compute range ---
+
     x_min = xs.min() - 2 * R
     x_max = xs.max() + 2 * R
     y_min = ys.min() - 3 * R
@@ -42,7 +42,6 @@ def VizPlain_plot(centers_list, R, y0_y1=None, display_circle=False, show_path=T
 
 
 
-    # --- final layout ---
     fig.update_xaxes(range=[x_min, x_max], scaleanchor="y", visible=False)
     fig.update_yaxes(range=[y_min, y_max], visible=False)
     fig.update_layout(width=1200, height=900, showlegend=False)
