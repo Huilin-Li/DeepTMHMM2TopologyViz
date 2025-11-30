@@ -3,7 +3,7 @@ from . import tools
 
 
 class TopologyCenters:
-    def __init__(self, R, away, max_a, max_b, dff3_df, line3_df):
+    def __init__(self, R, away, max_b, dff3_df, line3_df, max_a=2):
         self.start_center = (0, 0)
         self.away = int(away)
         self.max_a = int(max_a)
@@ -49,6 +49,7 @@ class TopologyCenters:
         df = self.df
         for idx, row in df.iterrows():
             length = row["length"]
+            print("idx=", idx)
             if idx == len(df)-1:
                 self.addCterm(length)
                 break
@@ -74,6 +75,7 @@ class TopologyCenters:
     def InsideNterm(self):
         df = self.df
         for idx, row in df.iterrows():
+            print("idx=", idx)
             length = row["length"]
             if idx == len(df)-1:
                 self.addCterm(length)

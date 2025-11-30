@@ -164,6 +164,7 @@ def _gen_peak_nCircleCenters(pre_center, n, R, upward):
         return [center1, center2, bridge_center]
 
 
+
 def _gen_horizontalS(pre_center, R, restCircles_comb_is_list, upward):
     centers_list = [pre_center]
     for idx, val in enumerate(restCircles_comb_is_list):

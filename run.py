@@ -1,7 +1,7 @@
 from deeptmhmm2topology.VizPlain import VizPlain_plot
 from deeptmhmm2topology.DeepTMHMM2Topology import TopologyCenters
 from deeptmhmm2topology.tools import Convert_dff32df, Convert_3line2df
-
+import pandas as pd
 
 
 
@@ -27,10 +27,14 @@ Topology = (
 TopoDataFrame = Topology.TopoDataFrame
 print(TopoDataFrame)
 
-# y0_y1 = (Topology.membraney0, Topology.membraney1)
+y0_y1 = (Topology.membraney0, Topology.membraney1)
 
 
-# print(len(CENTERS_LIST), len(set(CENTERS_LIST)))
+
+
+# TopoDataFrame.to_csv(f"./Topology_{}_{}", encoding='utf-8', index=False)
+print(y0_y1)
 
 # VizPlain_plot(CENTERS_LIST, R=0.25, y0_y1=y0_y1)
 
+f"He said his name is {name}."

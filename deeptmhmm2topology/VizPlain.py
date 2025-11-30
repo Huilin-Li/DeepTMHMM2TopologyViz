@@ -1,15 +1,27 @@
 import numpy as np
 import plotly.graph_objects as go
 
-def VizPlain_plot(centers_list, R, y0_y1=None, display_circle=False, show_path=True):
+
+
+
+
+def VizPlain_plot(centers_list, 
+                  R, 
+                  y0=None, 
+                  y1= None,
+                  display_circle=False, 
+                  show_path=True,
+                  add_NtermAnnotation=True,
+                  add_CtermAnnotation=True):
+    
     CENTERS_arr = np.asarray(centers_list)
     xs = CENTERS_arr[:, 0]
     ys = CENTERS_arr[:, 1]
     show_path = True
 
     fig = go.Figure()
-    if y0_y1:
-        fig.add_hrect(y0=y0_y1[0], y1=y0_y1[1], line_width=0, fillcolor="tan", opacity=0.5, layer="below")
+    if y0 and y1:
+        fig.add_hrect(y0=y0, y1=y1, line_width=0, fillcolor="tan", opacity=0.5, layer="below")
 
     if display_circle:
         for (cx, cy) in CENTERS_arr:
@@ -33,6 +45,19 @@ def VizPlain_plot(centers_list, R, y0_y1=None, display_circle=False, show_path=T
                 name="centers",
             )
         )
+
+    if add_NtermAnnotation:
+        NtermAA_x, NtermAA_y = centers_list[0][0], centers_list[0][-1]
+        fig.add_annotation(x=NtermAA_x, y=NtermAA_y,
+                        text="N<sub>2</sub>H-",
+                        showarrow=False,
+                        xshift=-30)
+    if add_CtermAnnotation:
+        CtermAA_x, CtermAA_y = centers_list[-1][0], centers_list[-1][-1]
+        fig.add_annotation(x=CtermAA_x, y=CtermAA_y,
+                        text="-COOH",
+                        showarrow=False,
+                        xshift=30)
 
 
     x_min = xs.min() - 2 * R
