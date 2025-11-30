@@ -139,4 +139,5 @@ fig.update_layout(
     showlegend=True
         )
 
-fig.write_html("protein_q92508.html")
+# fig.write_html("protein_q92508.html")
+fig.write_image("protein_q92508.svg")
