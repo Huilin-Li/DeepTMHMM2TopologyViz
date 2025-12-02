@@ -41,6 +41,7 @@ centers_df = pd.read_csv(".\TopologyCenters.csv")
 ## add more imformation, in this case, mutation records
 mut_df = pd.read_csv(".\mutations.csv")
 df = pd.merge(centers_df, mut_df, left_on='position', right_on='pos', how='outer')
+df.to_csv("./df.csv")
 mutation_list = list(set(df.dropna(subset=['mutation'])["mutation"].tolist()))
 # print(mutation_list) =4
 # ['deletion', 'termination', 'frameshift', 'insertion']
